@@ -107,6 +107,97 @@ class LoginView(View):
     @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
+
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.db.models import Count, Q
+from datetime import datetime
+from .models import User, LeaveApplication, Department
+
+@login_required
+def dashboard_view(request):
+    user = request.user
+    context = {}
+
+    # For monthly analytics
+    current_month = datetime.now().month
+    current_year = datetime.now().year
+
+    # Common data for all
+    leaves_this_month = LeaveApplication.objects.filter(
+        start_date__month=current_month,
+        start_date__year=current_year
+    )
+
+    if user.role in ['admin', 'hr_manager', 'hr_assistant']:
+        # Admin / HR Dashboard
+
+        context['total_employees'] = User.objects.filter(role='employee').count()
+        context['total_hods'] = User.objects.filter(role='manager').count()
+        context['total_releavers'] = LeaveApplication.objects.filter(releaver_approved=True).values('releaver').distinct().count()
+
+        context['processed_leaves'] = LeaveApplication.objects.filter(
+            final_status__in=['approved', 'rejected']
+        ).count()
+
+        context['pending_leaves'] = LeaveApplication.objects.filter(
+            final_status='pending'
+        ).count()
+
+        context['approved_leaves'] = LeaveApplication.objects.filter(
+            final_status='approved'
+        ).count()
+
+        context['leaves_this_month'] = leaves_this_month.count()
+
+        context['leaves_per_department'] = Department.objects.annotate(
+            leave_count=Count('user__leave_applications')
+        )
+
+        return render(request, 'dashboard/admin_dashboard.html', context)
+
+    elif user.role == 'employee':
+        # Employee Dashboard
+
+        context['department'] = user.department
+        context['my_leaves'] = LeaveApplication.objects.filter(applicant=user)
+        context['current_requests'] = context['my_leaves'].filter(final_status='pending')
+        context['past_leaves'] = context['my_leaves'].filter(final_status='approved')
+        context['reliever_for'] = LeaveApplication.objects.filter(releaver=user)
+
+        # Progress: e.g. leave still in process
+        context['in_progress'] = context['current_requests'].filter(
+            Q(releaver_approved=False) | Q(hod_approved=False) | Q(admin_approved=False)
+        )
+
+        return render(request, 'dashboard/employee_dashboard.html', context)
+
+    elif user.role == 'manager':
+        # HOD Dashboard
+
+        # Employees under this HOD's department
+        hod_department = Department.objects.filter(head=user).first()
+        employees_under_hod = User.objects.filter(department=hod_department.name)
+
+        context['department'] = hod_department
+        context['employees'] = employees_under_hod
+        context['total_employees'] = employees_under_hod.count()
+
+        # Leave requests by people in the department
+        context['leave_requests'] = LeaveApplication.objects.filter(applicant__in=employees_under_hod)
+
+        context['pending_leaves'] = context['leave_requests'].filter(final_status='pending').count()
+        context['approved_leaves'] = context['leave_requests'].filter(final_status='approved').count()
+        context['rejected_leaves'] = context['leave_requests'].filter(final_status='rejected').count()
+        context['leaves_this_month'] = context['leave_requests'].filter(start_date__month=current_month).count()
+
+        return render(request, 'dashboard/hod_dashboard.html', context)
+
+    else:
+        return render(request, 'dashboard/unknown_role.html')
+
+
     
     def post(self, request):
         """Process login request"""
