@@ -155,7 +155,7 @@ def dashboard_view(request):
             leave_count=Count('user__leave_applications')
         )
 
-        return render(request, 'dashboard/admin_dashboard.html', context)
+        return render(request, 'Application//admin_dashboard.html', context)
 
     elif user.role == 'employee':
         # Employee Dashboard
@@ -171,7 +171,7 @@ def dashboard_view(request):
             Q(releaver_approved=False) | Q(hod_approved=False) | Q(admin_approved=False)
         )
 
-        return render(request, 'dashboard/employee_dashboard.html', context)
+        return render(request, 'Application/employee_dashboard.html', context)
 
     elif user.role == 'manager':
         # HOD Dashboard
@@ -192,10 +192,10 @@ def dashboard_view(request):
         context['rejected_leaves'] = context['leave_requests'].filter(final_status='rejected').count()
         context['leaves_this_month'] = context['leave_requests'].filter(start_date__month=current_month).count()
 
-        return render(request, 'dashboard/hod_dashboard.html', context)
+        return render(request, 'Application/hod_dashboard.html', context)
 
     else:
-        return render(request, 'dashboard/unknown_role.html')
+        return render(request, 'Application/unknown_role.html')
 
 
     
