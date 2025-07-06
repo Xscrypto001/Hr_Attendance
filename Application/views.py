@@ -159,11 +159,6 @@ def dashboard_view(request):
           .annotate(leave_count=Count('leave_applications')) \
           .order_by('department')
 
-'''
-        context['leaves_per_department'] = Department.objects.annotate(
-            leave_count=Count('head__leave_applications')
-        )
-'''
         return render(request, 'Application/admin_dashboard.html', context)
 
     elif user.role == 'Employee':
