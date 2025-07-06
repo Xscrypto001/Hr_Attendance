@@ -41,7 +41,7 @@ def employee_list(request):
         'total_employees': employees.count(),
         'departments': departments,
     }
-    return render(request, 'Application/employee_list.html', context)
+    return render(request, 'Application/employees.html', context)
 
 
 @login_required
