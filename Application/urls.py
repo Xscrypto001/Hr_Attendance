@@ -11,6 +11,7 @@ path('logout/', LogoutView.as_view(), name='logout'),
     path('auth/', views.login_page, name='auth'),
     path('signin/', views.login_view, name='login'),
 path('dashboard/', views.dashboard_view, name='dashboard'),
-
+path('profile/', views.profile_view, name='profile'),
+    path('profile/update/', views.update_profile, name='update_profile'),
 #    path('signu/', SignupView.as_view(), name='signup'),
 ]
