@@ -1,3 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %
+
+
 <h2>HOD Dashboard - {{ department.name }}</h2>
 <p>Total Employees in Department: {{ total_employees }}</p>
 
@@ -12,3 +18,6 @@
     <li>{{ leave.applicant.full_name }} - {{ leave.leave_type }} - {{ leave.final_status }}</li>
   {% endfor %}
 </ul>
+
+
+{% endblock %}
