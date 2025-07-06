@@ -154,12 +154,17 @@ def dashboard_view(request):
         ).count()
 
         context['leaves_this_month'] = leaves_this_month.count()
+        context['leaves_per_department'] = User.objects.filter(role='employee') \
+          .values('department') \
+          .annotate(leave_count=Count('leave_applications')) \
+          .order_by('department')
 
+'''
         context['leaves_per_department'] = Department.objects.annotate(
-            leave_count=Count('user__leave_applications')
+            leave_count=Count('head__leave_applications')
         )
-
-        return render(request, 'Application//admin_dashboard.html', context)
+'''
+        return render(request, 'Application/admin_dashboard.html', context)
 
     elif user.role == 'Employee':
         # Employee Dashboard
