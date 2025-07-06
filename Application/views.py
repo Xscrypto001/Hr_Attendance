@@ -161,7 +161,7 @@ def dashboard_view(request):
 
         return render(request, 'Application/admin_dashboard.html', context)
 
-    elif user.role == 'Employee':
+    elif user.role == 'employee':
         # Employee Dashboard
 
         context['department'] = user.department
