@@ -1,0 +1,14 @@
+<h2>HOD Dashboard - {{ department.name }}</h2>
+<p>Total Employees in Department: {{ total_employees }}</p>
+
+<h3>Leave Requests in Department</h3>
+<p>Pending: {{ pending_leaves }}</p>
+<p>Approved: {{ approved_leaves }}</p>
+<p>Rejected: {{ rejected_leaves }}</p>
+<p>This Month: {{ leaves_this_month }}</p>
+
+<ul>
+  {% for leave in leave_requests %}
+    <li>{{ leave.applicant.full_name }} - {{ leave.leave_type }} - {{ leave.final_status }}</li>
+  {% endfor %}
+</ul>
