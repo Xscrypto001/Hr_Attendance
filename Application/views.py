@@ -29,7 +29,7 @@ def signup_view(request):
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
         role = request.POST.get('role')
-
+        department = request.POST.get('department', '')  
         # Basic validation
         if not all([name, email, password, confirm_password, role]):
             return HttpResponse("All fields are required", status=400)
@@ -46,6 +46,9 @@ def signup_view(request):
             email=email,
             password=password,
             first_name=name,
+           role=role,
+            department=department,
+            hire_date=timezone.now(),
         )
 
         # You can later link the `role` to a Profile model if needed
