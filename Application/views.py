@@ -27,7 +27,38 @@ from .models import User
 from django.contrib import messages
 from django.utils import timezone
 from django.contrib.auth.hashers import make_password
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from .models import User
+from django.contrib import messages
 
+@login_required
+def employee_list(request):
+    employees = User.objects.filter(role='employee')
+    departments = employees.values_list('department', flat=True).distinct()
+    context = {
+        'employees': employees,
+        'total_employees': employees.count(),
+        'departments': departments,
+    }
+    return render(request, 'Application/employee_list.html', context)
+
+
+@login_required
+def edit_employee(request, pk):
+    employee = get_object_or_404(User, pk=pk, role='employee')
+
+    if request.method == 'POST':
+        employee.full_name = request.POST.get('full_name')
+        employee.phone_number = request.POST.get('phone_number')
+        employee.department = request.POST.get('department')
+        employee.position = request.POST.get('position')
+        employee.save()
+        messages.success(request, 'Employee updated successfully.')
+        return redirect('employee_list')
+
+    return render(request, 'Application/edit_employee.html', {'employee': employee})
+/x
 @login_required
 def add_employee(request):
     if request.method == 'POST':
