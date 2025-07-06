@@ -25,6 +25,43 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import User
 from django.contrib import messages
+from django.utils import timezone
+from django.contrib.auth.hashers import make_password
+
+@login_required
+def add_employee(request):
+    if request.method == 'POST':
+        full_name = request.POST.get('full_name')
+        email = request.POST.get('email')
+        phone_number = request.POST.get('phone_number')
+        department = request.POST.get('department')
+        position = request.POST.get('position')
+        password = request.POST.get('password')
+
+        if not all([full_name, email, department, position, password]):
+            messages.error(request, 'All required fields must be filled.')
+            return redirect('add_employee')
+
+        if User.objects.filter(email=email).exists():
+            messages.error(request, 'A user with that email already exists.')
+            return redirect('add_employee')
+
+        User.objects.create(
+            username=email,
+            email=email,
+            full_name=full_name,
+            phone_number=phone_number,
+            department=department,
+            position=position,
+            role='employee',
+            hire_date=timezone.now().date(),
+            password=make_password(password),  # hashed manually since we're not using create_user()
+        )
+
+        messages.success(request, 'Employee added successfully.')
+        return redirect('employee_list')
+
+    return render(request, 'Application/add_employee.html')
 
 @login_required
 def profile_view(request):
