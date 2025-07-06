@@ -10,5 +10,7 @@ path('logout/', LogoutView.as_view(), name='logout'),
      path('signup/', views.signup_view, name='register'),
     path('auth/', views.login_page, name='auth'),
     path('signin/', views.login_view, name='login'),
+path('dashboard/', views.dashboard_view, name='dashboard'),
+
 #    path('signu/', SignupView.as_view(), name='signup'),
 ]
