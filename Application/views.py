@@ -21,6 +21,27 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .models import User
+from django.contrib import messages
+
+@login_required
+def profile_view(request):
+    return render(request, 'Application/profile.html', {'user_obj': request.user})
+
+@login_required
+def update_profile(request):
+    if request.method == 'POST':
+        user = request.user
+        user.full_name = request.POST.get('full_name')
+        user.phone_number = request.POST.get('phone_number')
+        user.department = request.POST.get('department')
+        user.position = request.POST.get('position')
+        user.save()
+        messages.success(request, 'Profile updated successfully.')
+        return redirect('profile')
+    return HttpResponse("Invalid request", status=400)
 
 @csrf_exempt  # Only use this if CSRF token is not included in your form!
 def signup_view(request):
