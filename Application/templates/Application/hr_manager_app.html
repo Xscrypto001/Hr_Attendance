@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Manager - Login & Signup</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo i {
+            font-size: 48px;
+            color: #667eea;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .logo h1 {
+            color: #333;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-container {
+            position: relative;
+        }
+
+        .form-toggle {
+            display: flex;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            border: none;
+            background: transparent;
+            color: #666;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            z-index: 2;
+            position: relative;
+        }
+
+        .toggle-btn.active {
+            color: #667eea;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: calc(50% - 4px);
+            height: calc(100% - 8px);
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            z-index: 1;
+        }
+
+        .toggle-slider.right {
+            transform: translateX(100%);
+        }
+
+        .form {
+            display: none;
+        }
+
+        .form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667eea;
+            font-size: 16px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group select {
+            cursor: pointer;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            cursor: pointer;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+
+        .password-toggle:hover {
+            color: #667eea;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .forgot-password a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password a:hover {
+            color: #764ba2;
+        }
+
+        .form-animation {
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #e8f2ff;
+            color: #667eea;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            .logo h1 {
+                font-size: 24px;
+            }
+            
+            .form-group input,
+            .form-group select {
+                padding: 12px 12px 12px 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <i class="fas fa-users-cog"></i>
+            <h1>HR Manager</h1>
+            <p>Streamline Your Human Resources</p>
+        </div>
+
+        <div class="form-container">
+            <div class="form-toggle">
+                <button class="toggle-btn active" onclick="showLogin()">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+                <button class="toggle-btn" onclick="showSignup()">
+                    <i class="fas fa-user-plus"></i> Sign Up
+                </button>
+                <div class="toggle-slider" id="toggleSlider"></div>
+            </div>
+
+            <!-- Login Form -->
+            <form class="form active" id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email Address</label>
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="loginEmail" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="loginPassword" name="password" required>
+                    <i class="fas fa-eye password-toggle" onclick="togglePassword('loginPassword')"></i>
+                </div>
+
+                <div class="form-group">
+                    <label for="loginRole">Login as</label>
+                    <i class="fas fa-user-tag"></i>
+                    <select id="loginRole" name="role" required>
+                        <option value="">Select your role</option>
+                        <option value="admin">👑 Admin</option>
+                        <option value="hr_manager">🏢 HR Manager</option>
+                        <option value="hr_assistant">👥 HR Assistant</option>
+                        <option value="employee">👤 Employee</option>
+                        <option value="manager">📊 Department Manager</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-sign-in-alt"></i> Login to Dashboard
+                </button>
+
+                <div class="forgot-password">
+                    <a href="#"><i class="fas fa-key"></i> Forgot Password?</a>
+                </div>
+            </form>
+
+            <!-- Signup Form -->
+            <form class="form" id="signupForm">
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="signupName" name="name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="signupEmail">Email Address</label>
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="signupEmail" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="signupPassword" name="password" required>
+                    <i class="fas fa-eye password-toggle" onclick="togglePassword('signupPassword')"></i>
+                </div>
+
+                <div class="form-group">
+                    <label for="signupConfirmPassword">Confirm Password</label>
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="signupConfirmPassword" name="confirm_password" required>
+                    <i class="fas fa-eye password-toggle" onclick="togglePassword('signupConfirmPassword')"></i>
+                </div>
+
+                <div class="form-group">
+                    <label for="signupRole">Register as</label>
+                    <i class="fas fa-user-tag"></i>
+                    <select id="signupRole" name="role" required>
+                        <option value="">Select your role</option>
+                        <option value="hr_manager">🏢 HR Manager</option>
+                        <option value="hr_assistant">👥 HR Assistant</option>
+                        <option value="employee">👤 Employee</option>
+                        <option value="manager">📊 Department Manager</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function showLogin() {
+            document.getElementById('loginForm').classList.add('active');
+            document.getElementById('signupForm').classList.remove('active');
+            document.querySelector('.toggle-btn').classList.add('active');
+            document.querySelectorAll('.toggle-btn')[1].classList.remove('active');
+            document.getElementById('toggleSlider').classList.remove('right');
+        }
+
+        function showSignup() {
+            document.getElementById('signupForm').classList.add('active');
+            document.getElementById('loginForm').classList.remove('active');
+            document.querySelectorAll('.toggle-btn')[1].classList.add('active');
+            document.querySelector('.toggle-btn').classList.remove('active');
+            document.getElementById('toggleSlider').classList.add('right');
+        }
+
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = input.nextElementSibling;
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        // Form submissions
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = {
+                email: formData.get('email'),
+                password: formData.get('password'),
+                role: formData.get('role')
+            };
+            
+            console.log('Login data:', data);
+            alert('Login functionality would connect to Django backend');
+        });
+
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const password = formData.get('password');
+            const confirmPassword = formData.get('confirm_password');
+            
+            if (password !== confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+            
+            const data = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                password: password,
+                role: formData.get('role')
+            };
+            
+            console.log('Signup data:', data);
+            alert('Signup functionality would connect to Django backend');
+        });
+
+        // Add animation to forms
+        document.querySelectorAll('.form').forEach(form => {
+            form.classList.add('form-animation');
+        });
+    </script>
+</body>
+</html>

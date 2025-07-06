@@ -15,70 +15,6 @@ import json
 from .models import User, LoginActivity, UserProfile
 from .forms import UserRegistrationForm, UserLoginForm
 
-from django.shortcuts import render, redirect
-#from django.contrib.auth.models import User
-from django.contrib import messages
-from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse
-
-@csrf_exempt  # Only use this if CSRF token is not included in your form!
-def signup_view(request):
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        confirm_password = request.POST.get('confirm_password')
-        role = request.POST.get('role')
-
-        # Basic validation
-        if not all([name, email, password, confirm_password, role]):
-            return HttpResponse("All fields are required", status=400)
-
-        if password != confirm_password:
-            return HttpResponse("Passwords do not match", status=400)
-
-        if User.objects.filter(username=email).exists():
-            return HttpResponse("User with this email already exists", status=400)
-
-        # Create user
-        user = User.objects.create_user(
-            username=email,
-            email=email,
-            password=password,
-            first_name=name,
-        )
-
-        # You can later link the `role` to a Profile model if needed
-        return redirect('index')  # or wherever you want to redirect after success
-
-    return HttpResponse("Invalid request", status=400)
-@csrf_exempt  # Optional if you're not using {% csrf_token %}
-def login_view(request):
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-
-        if not all([email, password]):
-            return HttpResponse("Email and password are required", status=400)
-
-        user = authenticate(request, username=email, password=password)
-
-        if user is not None:
-            login(request, user)
-            return redirect('index')  # Redirect to homepage/dashboard
-        else:
-            return HttpResponse("Invalid credentials", status=401)
-
-    return HttpResponse("Invalid request", status=400)
-
-def login_page(request):
-
-    return render(request, 'Application/auth.html')
-
-def index(request):
-
-    return render(request, 'Application/index.html')
-
 def get_client_ip(request):
     """Get client IP address"""
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -99,7 +35,7 @@ class AuthView(View):
         context = {
             'roles': User.ROLE_CHOICES,
         }
-        return render(request, 'Application/auth.html', context)
+        return render(request, 'auth/login_signup.html', context)
 
 class LoginView(View):
     """Handle user login"""
@@ -204,7 +140,7 @@ class LoginView(View):
         }
         return role_redirects.get(role, '/dashboard/')
 
-'''class SignupView(View):
+class SignupView(View):
     """Handle user registration"""
     
     @method_decorator(csrf_exempt)
@@ -327,40 +263,6 @@ class LoginView(View):
         }
         return role_redirects.get(role, '/dashboard/')
 
-
-from django.views import View
-from django.http import JsonResponse
-from django.contrib.auth.models import User
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
-import json
-
-@method_decorator(csrf_exempt, name='dispatch')
-class SignupView(View):
-    def post(self, request):
-        try:
-            if request.content_type == 'application/json':
-                data = json.loads(request.body)
-            else:
-                data = request.POST
-
-            username = data.get('username')
-            email = data.get('email')
-            password = data.get('password')
-
-            if not all([username, email, password]):
-                return JsonResponse({'error': 'Missing fields'}, status=400)
-
-            if User.objects.filter(username=username).exists():
-                return JsonResponse({'error': 'Username already taken'}, status=400)
-
-            user = User.objects.create_user(username=username, email=email, password=password)
-            return JsonResponse({'message': 'Signup successful'}, status=201)
-
-        except Exception as e:
-            print(e)
-            return JsonResponse({'error': str(e)}, status=400)
-'''
 class LogoutView(View):
     """Handle user logout"""
     
@@ -415,10 +317,9 @@ def profile(request):
     }
     
     return render(request, 'profile/profile.html', context)
-'''
+
 def check_email_availability(request):
     """Check if email is available for registration"""
     email = request.GET.get('email', '').strip().lower()
     
     if not email:
-'''
