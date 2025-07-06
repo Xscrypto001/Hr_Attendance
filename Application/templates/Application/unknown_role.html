@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Unknown Role{% endblock %}
+
+{% block content %}
+<div class="text-center mt-5">
+    <h2>Access Denied</h2>
+    <p>Your role is not authorized to view the dashboard.</p>
+    <p>Please contact the system administrator if you believe this is a mistake.</p>
+    <a href="{% url 'logout' %}" class="btn btn-danger mt-3">Logout</a>
+</div>
+{% endblock %}
