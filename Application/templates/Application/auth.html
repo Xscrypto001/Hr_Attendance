@@ -352,6 +352,50 @@
                     <i class="fas fa-eye password-toggle" onclick="togglePassword('signupConfirmPassword')"></i>
                 </div>
 
+<div class="form-group">
+    <label for="signupRole">Register as</label>
+    <i class="fas fa-user-tag"></i>
+    <select id="signupRole" name="role" class="form-control" required>
+        <option value="">Select your role</option>
+        <option value="hr_manager">🏢 HR Manager</option>
+        <option value="hr_assistant">👥 HR Assistant</option>
+        <option value="employee">👤 Employee</option>
+        <option value="manager">📊 Department Manager</option>
+    </select>
+</div>
+
+<div class="form-group" id="departmentGroup" style="display: none;">
+    <label for="department">Department</label>
+    <select name="department" id="department" class="form-control">
+        <option value="">-- Select Department --</option>
+        <option value="Finance">Finance</option>
+        <option value="IT Support">IT Support</option>
+        <option value="Human Resources">Human Resources</option>
+        <option value="Marketing">Marketing</option>
+        <option value="Sales">Sales</option>
+        <option value="Operations">Operations</option>
+        <option value="Procurement">Procurement</option>
+        <option value="Legal">Legal</option>
+        <option value="Customer Service">Customer Service</option>
+    </select>
+</div>
+
+<script>
+    document.getElementById('signupRole').addEventListener('change', function () {
+        const departmentGroup = document.getElementById('departmentGroup');
+        if (this.value) {
+            departmentGroup.style.display = 'block';
+            document.getElementById('department').setAttribute('required', 'required');
+        } else {
+            departmentGroup.style.display = 'none';
+            document.getElementById('department').removeAttribute('required');
+        }
+    });
+</script>
+
+
+
+<!--
                 <div class="form-group">
                     <label for="signupRole">Register as</label>
                     <i class="fas fa-user-tag"></i>
@@ -380,7 +424,7 @@
     <option value="Legal">Legal</option>
     <option value="Customer Service">Customer Service</option>
 </select>
-</div>
+</div> -->
                 <button type="submit" class="submit-btn">
                     <i class="fas fa-user-plus"></i> Create Account
                 </button>
