@@ -58,7 +58,7 @@ def edit_employee(request, pk):
         return redirect('employee_list')
 
     return render(request, 'Application/edit_employee.html', {'employee': employee})
-/x
+
 @login_required
 def add_employee(request):
     if request.method == 'POST':
