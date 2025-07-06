@@ -74,7 +74,7 @@ def signup_view(request):
         )
 
         # You can later link the `role` to a Profile model if needed
-        return redirect('index')  # or wherever you want to redirect after success
+        return redirect('dashboard')  # or wherever you want to redirect after success
 
     return HttpResponse("Invalid request", status=400)
 @csrf_exempt  # Optional if you're not using {% csrf_token %}
@@ -90,7 +90,7 @@ def login_view(request):
 
         if user is not None:
             login(request, user)
-            return redirect('index')  # Redirect to homepage/dashboard
+            return redirect('dashboard')  # Redirect to homepage/dashboard
         else:
             return HttpResponse("Invalid credentials", status=401)
 
