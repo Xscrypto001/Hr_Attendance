@@ -1,31 +1,35 @@
-{% extends "Apppication/base.html" %}
+{% extends "Application/base.html" %}
 {% block title %}Add New Employee{% endblock %}
 
 {% block content %}
-<h2>Add New Employee</h2>
-
-<form method="post">
-    {% csrf_token %}
-
-    <div class="form-group">
-        <label for="full_name">Full Name *</label>
-        <input type="text" name="full_name" class="form-control" required>
+<div class="container mt-5">
+  <div class="card shadow-sm">
+    <div class="card-header bg-dark text-white">
+      <h4 class="mb-0">👤 Add New Employee</h4>
     </div>
+    <div class="card-body">
+      <form method="post" novalidate>
+        {% csrf_token %}
 
-    <div class="form-group">
-        <label for="email">Email Address *</label>
-        <input type="email" name="email" class="form-control" required>
-    </div>
+        <div class="mb-3">
+          <label for="full_name" class="form-label">Full Name *</label>
+          <input type="text" name="full_name" class="form-control" placeholder="e.g. John Doe" required>
+        </div>
 
-    <div class="form-group">
-        <label for="phone_number">Phone Number</label>
-        <input type="text" name="phone_number" class="form-control">
-    </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">Email Address *</label>
+          <input type="email" name="email" class="form-control" placeholder="e.g. johndoe@example.com" required>
+        </div>
 
-    <div class="form-group">
-        <label for="department">Department *</label>
-        <select name="department" class="form-control" required>
-            <option value="">-- Select --</option>
+        <div class="mb-3">
+          <label for="phone_number" class="form-label">Phone Number</label>
+          <input type="text" name="phone_number" class="form-control" placeholder="e.g. +254712345678">
+        </div>
+
+        <div class="mb-3">
+          <label for="department" class="form-label">Department *</label>
+          <select name="department" class="form-select" required>
+            <option value="">-- Select Department --</option>
             <option value="Finance">Finance</option>
             <option value="IT Support">IT Support</option>
             <option value="Human Resources">Human Resources</option>
@@ -35,26 +39,33 @@
             <option value="Procurement">Procurement</option>
             <option value="Legal">Legal</option>
             <option value="Customer Service">Customer Service</option>
-        </select>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="position" class="form-label">Position *</label>
+          <input type="text" name="position" class="form-control" placeholder="e.g. HR Manager" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="form-label">Password *</label>
+          <input type="password" name="password" class="form-control" required>
+        </div>
+
+        <div class="d-flex justify-content-between">
+          <button type="submit" class="btn btn-primary">➕ Add Employee</button>
+          <a href="{% url 'employee_list' %}" class="btn btn-secondary">❌ Cancel</a>
+        </div>
+      </form>
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-info mt-4" role="alert">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
     </div>
-
-    <div class="form-group">
-        <label for="position">Position *</label>
-        <input type="text" name="position" class="form-control" required>
-    </div>
-
-    <div class="form-group">
-        <label for="password">Password *</label>
-        <input type="password" name="password" class="form-control" required>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Add Employee</button>
-    <a href="{% url 'employee_list' %}" class="btn btn-secondary">Cancel</a>
-</form>
-
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-info mt-3">{{ message }}</div>
-    {% endfor %}
-{% endif %}
+  </div>
+</div>
 {% endblock %}

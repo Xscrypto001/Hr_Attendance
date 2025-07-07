@@ -1,0 +1,48 @@
+{% extends 'Application/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-sm">
+    <div class="card-header bg-dark text-white">
+      <h4 class="mb-0">🧾 Leaves Awaiting Your Approval (Reliever)</h4>
+    </div>
+    <div class="card-body">
+      {% if requests %}
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover align-middle">
+            <thead class="table-dark">
+              <tr>
+                <th scope="col">👤 Applicant</th>
+                <th scope="col">📅 Dates</th>
+                <th scope="col">📝 Reason</th>
+                <th scope="col">⚙️ Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for req in requests %}
+              <tr>
+                <td>{{ req.applicant.full_name }}</td>
+                <td>{{ req.start_date }} → {{ req.end_date }}</td>
+                <td>{{ req.reason|default:"No reason provided." }}</td>
+                <td>
+                  <form method="post" class="d-flex gap-2">
+                    {% csrf_token %}
+                    <input type="hidden" name="leave_id" value="{{ req.id }}">
+                    <button name="action" value="approve" class="btn btn-sm btn-success">✅ Approve</button>
+                    <button name="action" value="reject" class="btn btn-sm btn-danger">❌ Reject</button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="alert alert-info text-center">
+          💤 No pending leave requests awaiting your approval.
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

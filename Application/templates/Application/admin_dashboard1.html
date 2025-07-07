@@ -1,0 +1,30 @@
+{% extends "Application/base.html" %}
+
+{% block title %}HOD Dashboard{% endblock %}
+{% block content %
+
+
+<h2>Welcome {{ user.full_name }}</h2>
+<p>Department: {{ department }}</p>
+
+<h3>My Leave Requests</h3>
+<ul>
+  {% for leave in my_leaves %}
+    <li>{{ leave.leave_type }} from {{ leave.start_date }} to {{ leave.end_date }} - {{ leave.final_status }}</li>
+  {% endfor %}
+</ul>
+
+<h3>Currently Chosen as Releaver</h3>
+<ul>
+  {% for leave in reliever_for %}
+    <li>For {{ leave.applicant.full_name }} ({{ leave.start_date }} - {{ leave.end_date }})</li>
+  {% endfor %}
+</ul>
+
+<h3>In Progress</h3>
+<ul>
+  {% for leave in in_progress %}
+    <li>{{ leave.leave_type }} ({{ leave.final_status }})</li>
+  {% endfor %}
+</ul>
+

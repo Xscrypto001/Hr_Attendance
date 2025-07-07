@@ -36,6 +36,129 @@ from django.contrib import messages
 from .models import Department
 from django.contrib.auth.decorators import login_required
 
+
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import LeaveApplication, User
+from django.contrib import messages
+
+# Level 1: Employee applies
+@login_required
+def apply_leave(request):
+    if request.user.role != 'employee':
+        return redirect('dashboard')
+
+    if request.method == 'POST':
+        reliever_id = request.POST.get('reliever')
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+        reason = request.POST.get('reason')
+
+        reliever = User.objects.get(id=reliever_id)
+        LeaveApplication.objects.create(
+            applicant=request.user,
+            releaver=reliever,
+            start_date=start_date,
+            end_date=end_date,
+            reason=reason
+        )
+        messages.success(request, "Leave application submitted to reliever.")
+        return redirect('dashboard')
+
+    employees = User.objects.filter(role='employee').exclude(id=request.user.id)
+    return render(request, 'Application/apply_leave.html', {'employees': employees})
+
+
+# Level 2: Reliever approval
+@login_required
+def reliever_requests(request):
+    if request.user.role != 'employee':
+        return redirect('dashboard')
+
+    requests = LeaveApplication.objects.filter(releaver=request.user, releaver_approved=False)
+    if request.method == 'POST':
+        leave_id = request.POST.get('leave_id')
+        action = request.POST.get('action')
+        leave = get_object_or_404(LeaveApplication, id=leave_id, releaver=request.user)
+
+        if action == 'approve':
+            leave.releaver_approved = True
+            leave.save()
+            messages.success(request, "Leave approved and sent to HOD.")
+        elif action == 'reject':
+            leave.final_status = 'rejected'
+            leave.save()
+            messages.warning(request, "Leave rejected.")
+        return redirect('reliever_requests')
+
+    return render(request, 'Application/reliever_requests.html', {'requests': requests})
+
+
+# Level 3: HOD approval
+@login_required
+def hod_approvals(request):
+    if request.user.role != 'manager':
+        return redirect('dashboard')
+
+    dept = request.user.department
+    applications = LeaveApplication.objects.filter(
+        applicant__department=dept,
+        releaver_approved=True,
+        hod_approved=False
+    )
+
+    if request.method == 'POST':
+        leave_id = request.POST.get('leave_id')
+        action = request.POST.get('action')
+        leave = get_object_or_404(LeaveApplication, id=leave_id)
+
+        if action == 'approve':
+            leave.hod_approved = True
+            leave.save()
+            messages.success(request, "Leave sent to Admin for final approval.")
+        elif action == 'reject':
+            leave.final_status = 'rejected'
+            leave.save()
+            messages.warning(request, "Leave rejected.")
+        return redirect('hod_approvals')
+
+    return render(request, 'Application/hod_approvals.html', {'applications': applications})
+
+
+# Level 4: Admin approval
+@login_required
+def admin_approvals(request):
+    if request.user.role not in ['admin', 'hr_manager', 'hr_assistant']:
+        return redirect('dashboard')
+
+    applications = LeaveApplication.objects.filter(
+        releaver_approved=True,
+        hod_approved=True,
+        admin_approved=False,
+        final_status='pending'
+    )
+
+    if request.method == 'POST':
+        leave_id = request.POST.get('leave_id')
+        action = request.POST.get('action')
+        leave = get_object_or_404(LeaveApplication, id=leave_id)
+
+        if action == 'approve':
+            leave.admin_approved = True
+            leave.final_status = 'approved'
+            leave.save()
+            messages.success(request, "Leave fully approved.")
+        elif action == 'reject':
+            leave.final_status = 'rejected'
+            leave.save()
+            messages.warning(request, "Leave rejected.")
+        return redirect('admin_approvals')
+
+    return render(request, 'Application/admin_approvals.html', {'applications': applications})
+
+
+
 @login_required
 def department_list(request):
     departments = Department.objects.all()
@@ -54,7 +177,7 @@ def add_department(request):
             messages.success(request, 'Department added successfully.')
         return redirect('department_list')
 
-    return render(request, 'Application/add_department.html')
+    return render(request, 'Application/add_departments.html')
 
 @login_required
 def edit_department(request, pk):
@@ -137,10 +260,40 @@ def add_employee(request):
         return redirect('employee_list')
 
     return render(request, 'Application/add_employee.html')
-
+'''
 @login_required
 def profile_view(request):
     return render(request, 'Application/profile.html', {'user_obj': request.user})
+
+@login_required
+def update_profile(request):
+    if request.method == 'POST':
+        user = request.user
+        user.full_name = request.POST.get('full_name')
+        user.phone_number = request.POST.get('phone_number')
+        user.department = request.POST.get('department')
+        user.position = request.POST.get('position')
+        user.save()
+        messages.success(request, 'Profile updated successfully.')
+        return redirect('profile')
+    return HttpResponse("Invalid request", status=400)
+'''
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.http import HttpResponse
+
+@login_required
+def profile_view(request):
+    departments = [
+        "Finance", "IT Support", "Human Resources", "Marketing", "Sales",
+        "Operations", "Procurement", "Legal", "Customer Service"
+    ]
+    return render(request, 'Application/profile.html', {
+        'user_obj': request.user,
+        'departments': departments
+    })
 
 @login_required
 def update_profile(request):
@@ -184,6 +337,8 @@ def signup_view(request):
             department=department,
             hire_date=timezone.now(),
         )
+        user_reg = authenticate(request, username=email, password=password)
+        login(request, user_reg)
 
         # You can later link the `role` to a Profile model if needed
         return redirect('dashboard')  # or wherever you want to redirect after success

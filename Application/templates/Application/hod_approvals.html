@@ -1,0 +1,46 @@
+{% extends 'Application/base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Departmental Leave Requests</h2>
+    {% if applications %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Applicant</th>
+                <th>Dates</th>
+                <th>Reason</th>
+                <th>Reliever</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for app in applications %}
+            <tr>
+                <td>{{ app.applicant.full_name }}</td>
+                <td>{{ app.start_date }} to {{ app.end_date }}</td>
+                <td>{{ app.reason }}</td>
+                <td>
+                    {{ app.releaver.full_name }}
+                    {% if app.releaver_approved %}
+                        ✅
+                    {% else %}
+                        ❌
+                    {% endif %}
+                </td>
+                <td>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="leave_id" value="{{ app.id }}">
+                        <button name="action" value="approve" class="btn btn-success btn-sm">Approve</button>
+                        <button name="action" value="reject" class="btn btn-danger btn-sm">Reject</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p>No leave requests pending.</p>
+    {% endif %}
+</div>
+{% endblock %}

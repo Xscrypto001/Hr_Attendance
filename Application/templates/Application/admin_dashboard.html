@@ -1,30 +1,75 @@
 {% extends "Application/base.html" %}
 
 {% block title %}Admin Dashboard{% endblock %}
-{% block content %
 
+{% block content %}
+<div class="container mt-5">
+  <div class="bg-dark text-white p-4 rounded shadow-sm">
+    <h2 class="text-center mb-4">Admin Dashboard - <span class="text-warning">{{ department.name }}</span></h2>
+    
+    <div class="row text-center">
+      <div class="col-md-3">
+        <div class="card bg-primary text-white mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Employees</h5>
+            <p class="card-text fs-4">{{ total_employees|default:"0" }}</p>
+          </div>
+        </div>
+      </div>
 
-<h2>Welcome {{ user.full_name }}</h2>
-<p>Department: {{ department }}</p>
+      <div class="col-md-3">
+        <div class="card bg-warning text-dark mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Pending Requests</h5>
+            <p class="card-text fs-4">{{ pending_leaves|default:"0" }}</p>
+          </div>
+        </div>
+      </div>
 
-<h3>My Leave Requests</h3>
-<ul>
-  {% for leave in my_leaves %}
-    <li>{{ leave.leave_type }} from {{ leave.start_date }} to {{ leave.end_date }} - {{ leave.final_status }}</li>
-  {% endfor %}
-</ul>
+      <div class="col-md-3">
+        <div class="card bg-success text-white mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Approved</h5>
+            <p class="card-text fs-4">{{ approved_leaves|default:"0" }}</p>
+          </div>
+        </div>
+      </div>
 
-<h3>Currently Chosen as Releaver</h3>
-<ul>
-  {% for leave in reliever_for %}
-    <li>For {{ leave.applicant.full_name }} ({{ leave.start_date }} - {{ leave.end_date }})</li>
-  {% endfor %}
-</ul>
+      <div class="col-md-3">
+        <div class="card bg-danger text-white mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Rejected</h5>
+            <p class="card-text fs-4">{{ rejected_leaves|default:"0" }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<h3>In Progress</h3>
-<ul>
-  {% for leave in in_progress %}
-    <li>{{ leave.leave_type }} ({{ leave.final_status }})</li>
-  {% endfor %}
-</ul>
+    <div class="text-center">
+      <h4 class="mt-4 text-info">Leave Requests This Month</h4>
+      <p class="fs-4">{{ leaves_this_month|default:"0" }}</p>
+    </div>
 
+    <hr class="my-4 bg-light">
+
+    <h4 class="text-light">Leave Requests List</h4>
+    {% if leave_requests %}
+      <ul class="list-group mb-5">
+        {% for leave in leave_requests %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <strong>{{ leave.applicant.full_name }}</strong><br>
+              <small class="text-muted">{{ leave.leave_type }}</small>
+            </div>
+            <span class="badge {% if leave.final_status == 'Approved' %}bg-success{% elif leave.final_status == 'Rejected' %}bg-danger{% else %}bg-warning text-dark{% endif %} p-2 rounded">
+              {{ leave.final_status }}
+            </span>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="alert alert-info">No leave requests found.</div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

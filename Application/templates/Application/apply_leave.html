@@ -1,0 +1,51 @@
+{% extends 'Application/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-sm">
+    <div class="card-header bg-dark text-white">
+      <h4 class="mb-0">📝 Apply for Leave</h4>
+    </div>
+    <div class="card-body">
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        <div class="mb-3">
+          <label for="start_date" class="form-label">📅 Start Date</label>
+          <input type="date" name="start_date" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="end_date" class="form-label">📅 End Date</label>
+          <input type="date" name="end_date" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="reason" class="form-label">🧾 Reason</label>
+          <textarea name="reason" class="form-control" rows="4" placeholder="State your reason..." required></textarea>
+        </div>
+
+        <div class="mb-4">
+          <label for="reliever" class="form-label">🧍 Select Reliever</label>
+          <select name="reliever" class="form-select" required>
+            <option value="" disabled selected>Choose a reliever</option>
+            {% for emp in employees %}
+              <option value="{{ emp.id }}">{{ emp.full_name }} - {{ emp.department }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">
+          🚀 Submit Leave Request
+        </button>
+      </form>
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-info mt-3">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

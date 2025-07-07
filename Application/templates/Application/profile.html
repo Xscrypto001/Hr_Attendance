@@ -2,47 +2,54 @@
 {% block title %}My Profile{% endblock %}
 
 {% block content %}
-<h2>My Profile</h2>
-
-<form method="post" action="{% url 'update_profile' %}">
-    {% csrf_token %}
-    <div class="form-group">
-        <label for="full_name">Full Name</label>
-        <input type="text" name="full_name" id="full_name" class="form-control" value="{{ user_obj.full_name }}" required>
+<div class="container mt-5">
+  <div class="card shadow-sm">
+    <div class="card-header bg-dark text-white">
+      <h4 class="mb-0">👤 My Profile</h4>
     </div>
+    <div class="card-body">
+      <form method="post" action="{% url 'update_profile' %}" novalidate>
+        {% csrf_token %}
 
-    <div class="form-group">
-        <label for="phone_number">Phone Number</label>
-        <input type="text" name="phone_number" id="phone_number" class="form-control" value="{{ user_obj.phone_number }}">
-    </div>
+        <div class="mb-3">
+          <label for="full_name" class="form-label">Full Name *</label>
+          <input type="text" name="full_name" id="full_name" class="form-control" value="{{ user_obj.full_name }}" required>
+        </div>
 
-    <div class="form-group">
-        <label for="department">Department</label>
-        <select name="department" id="department" class="form-control">
-            <option value="Finance" {% if user_obj.department == "Finance" %}selected{% endif %}>Finance</option>
-            <option value="IT Support" {% if user_obj.department == "IT Support" %}selected{% endif %}>IT Support</option>
-            <option value="Human Resources" {% if user_obj.department == "Human Resources" %}selected{% endif %}>Human Resources</option>
-            <option value="Marketing" {% if user_obj.department == "Marketing" %}selected{% endif %}>Marketing</option>
-            <option value="Sales" {% if user_obj.department == "Sales" %}selected{% endif %}>Sales</option>
-            <option value="Operations" {% if user_obj.department == "Operations" %}selected{% endif %}>Operations</option>
-            <option value="Procurement" {% if user_obj.department == "Procurement" %}selected{% endif %}>Procurement</option>
-            <option value="Legal" {% if user_obj.department == "Legal" %}selected{% endif %}>Legal</option>
-            <option value="Customer Service" {% if user_obj.department == "Customer Service" %}selected{% endif %}>Customer Service</option>
-        </select>
-    </div>
+        <div class="mb-3">
+          <label for="phone_number" class="form-label">Phone Number</label>
+          <input type="text" name="phone_number" id="phone_number" class="form-control" value="{{ user_obj.phone_number|default:'' }}">
+        </div>
 
-    <div class="form-group">
-        <label for="position">Job Title</label>
-        <input type="text" name="position" id="position" class="form-control" value="{{ user_obj.position }}">
-    </div>
-
-    <button type="submit" class="btn btn-primary">Update Profile</button>
-</form>
-
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-info mt-3">{{ message }}</div>
+<div class="mb-3">
+  <label for="department" class="form-label">Department</label>
+  <select name="department" id="department" class="form-select">
+    {% for dept in departments %}
+      <option value="{{ dept }}" {% if user_obj.department == dept %}selected{% endif %}>{{ dept }}</option>
     {% endfor %}
-{% endif %}
+  </select>
+</div>
 
+
+       
+
+        <div class="mb-4">
+          <label for="position" class="form-label">Job Title</label>
+          <input type="text" name="position" id="position" class="form-control" value="{{ user_obj.position|default:'' }}">
+        </div>
+
+        <div class="d-flex justify-content-between">
+          <button type="submit" class="btn btn-primary">💾 Update Profile</button>
+          <a href="{% url 'dashboard' %}" class="btn btn-secondary">🔙 Back</a>
+        </div>
+      </form>
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-info mt-4" role="alert">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
 {% endblock %}

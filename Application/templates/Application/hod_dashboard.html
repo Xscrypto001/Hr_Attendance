@@ -1,23 +1,75 @@
 {% extends "Application/base.html" %}
 
-{% block title %}Admin Dashboard{% endblock %}
-{% block content %
+{% block title %}HOD Dashboard{% endblock %}
 
+{% block content %}
+<div class="container mt-5">
+  <div class="bg-dark text-white p-4 rounded shadow-sm">
+    <h2 class="text-center mb-4">Welcome, <span class="text-info">{{ user.full_name }}</span></h2>
+    <p class="text-center">Department: <span class="text-warning">{{ department }}</span></p>
 
-<h2>HOD Dashboard - {{ department.name }}</h2>
-<p>Total Employees in Department: {{ total_employees }}</p>
+    <!-- My Leave Requests -->
+    <div class="mt-5">
+      <h4 class="text-light">📌 My Leave Requests</h4>
+      {% if my_leaves %}
+        <ul class="list-group mb-4">
+          {% for leave in my_leaves %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <strong>{{ leave.leave_type }}</strong><br>
+                <small class="text-muted">{{ leave.start_date }} → {{ leave.end_date }}</small>
+              </div>
+              <span class="badge {% if leave.final_status == 'Approved' %}bg-success{% elif leave.final_status == 'Rejected' %}bg-danger{% else %}bg-warning text-dark{% endif %} p-2 rounded">
+                {{ leave.final_status }}
+              </span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <div class="alert alert-info">You have no leave requests yet.</div>
+      {% endif %}
+    </div>
 
-<h3>Leave Requests in Department</h3>
-<p>Pending: {{ pending_leaves }}</p>
-<p>Approved: {{ approved_leaves }}</p>
-<p>Rejected: {{ rejected_leaves }}</p>
-<p>This Month: {{ leaves_this_month }}</p>
+    <!-- Currently Chosen as Reliever -->
+    <div class="mt-5">
+      <h4 class="text-light">🧍 Currently Chosen as Reliever</h4>
+      {% if reliever_for %}
+        <ul class="list-group mb-4">
+          {% for leave in reliever_for %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <strong>{{ leave.applicant.full_name }}</strong><br>
+                <small class="text-muted">{{ leave.start_date }} → {{ leave.end_date }}</small>
+              </div>
+              <span class="badge bg-secondary p-2 rounded">Reliever</span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <div class="alert alert-warning">You are not assigned as a reliever for any leave currently.</div>
+      {% endif %}
+    </div>
 
-<ul>
-  {% for leave in leave_requests %}
-    <li>{{ leave.applicant.full_name }} - {{ leave.leave_type }} - {{ leave.final_status }}</li>
-  {% endfor %}
-</ul>
-
-
-
+    <!-- In Progress -->
+    <div class="mt-5">
+      <h4 class="text-light">⏳ In Progress</h4>
+      {% if in_progress %}
+        <ul class="list-group mb-5">
+          {% for leave in in_progress %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <strong>{{ leave.leave_type }}</strong>
+              </div>
+              <span class="badge {% if leave.final_status == 'Approved' %}bg-success{% elif leave.final_status == 'Rejected' %}bg-danger{% else %}bg-warning text-dark{% endif %} p-2 rounded">
+                {{ leave.final_status }}
+              </span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <div class="alert alert-secondary">No in-progress leave requests found.</div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
