@@ -413,7 +413,7 @@
     </style>
 </head>
 <body>
-    <!-- Top Navigation -->
+      
     <nav class="navbar">
         <div class="nav-container">
             <a href="#" class="logo">
@@ -421,7 +421,7 @@
                 Leavex
             </a>
             
-            <!-- Employee Navigation -->
+            
             {% if user.is_authenticated and user.role == 'employee' %}
             <ul class="nav-links" id="navLinks">
                 <li><a href="{% url 'dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
@@ -431,7 +431,7 @@
             </ul>
             {% endif %}
             
-            <!-- HOD Navigation -->
+            
             {% if user.is_authenticated and user.role == 'hod' %}
             <ul class="nav-links" id="navLinks">
                 <li><a href="{% url 'dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
@@ -475,11 +475,11 @@
         </div>
     </nav>
 
-    <!-- Sidebar Toggle Button -->
+   
     <button class="sidebar-toggle" onclick="toggleSidebar()">
         <i class="fas fa-bars"></i>
     </button>
-<!--
+
     
     <div class="sidebar" id="sidebar">
 
@@ -501,9 +501,11 @@
         </div></div>
         {% endif %}
 
--->
 
-        <!-- Employee Sidebar -->
+
+
+
+         
         {% if user.is_authenticated and user.role == 'employee' %}
         <div class="sidebar-section">
             <div class="sidebar-title">Employee Menu</div>
@@ -537,7 +539,7 @@
         {% endif %}
 
 
-        <!-- HOD Sidebar -->
+         
         {% if user.is_authenticated and user.role == 'admin' %}
         <div class="sidebar-section">
             <div class="sidebar-title">Admin Dashboard</div>
@@ -561,12 +563,12 @@
         {% endif %}
     </div>
 
-    <!-- Content Area -->
+   
     <div class="content-area">
-       <!-- <div class="welcome-card fade-in">
+        <div class="welcome-card fade-in">
             <h1>Welcome{% if user.is_authenticated %}, {{ user.first_name|default:user.username }}{% endif %}</h1>
             
-        </div>-->
+        </div>
         {% block content %}{% endblock %}
     </div>
 
