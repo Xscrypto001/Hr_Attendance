@@ -465,7 +465,7 @@ def dashboard_view(request):
 
         return render(request, 'Application/employee_dashboard.html', context)
 
-    elif user.role == 'manager':
+    elif user.role == 'hod':
         # HOD Dashboard
 
         # Employees under this HOD's department
