@@ -30,7 +30,7 @@
           <select name="reliever" class="form-select" required>
             <option value="" disabled selected>Choose a reliever</option>
             {% for emp in employees %}
-              <option value="{{ emp.id }}">{{ emp.full_name }} - {{ emp.department }}</option>
+              <option value="{{ emp.id }}">{{ emp.first_name }} - {{ emp.department }}</option>
             {% endfor %}
           </select>
         </div>
