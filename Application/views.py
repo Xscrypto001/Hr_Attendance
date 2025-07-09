@@ -469,12 +469,18 @@ def dashboard_view(request):
         # HOD Dashboard
 
         # Employees under this HOD's department
+
         hod_department = Department.objects.filter(head=user).first()
-        employees_under_hod = User.objects.filter(department=hod_department.name)
+        employees_under_hod = []
+
+        if hod_department:
+            employees_under_hod = User.objects.filter(department=hod_department)
+        else:
+            messages.warning(request, "You are not assigned as HOD of any department.")
 
         context['department'] = hod_department
         context['employees'] = employees_under_hod
-        context['total_employees'] = employees_under_hod.count()
+        context['total_employees'] = len(employees_under_hod)
 
         # Leave requests by people in the department
         context['leave_requests'] = LeaveApplication.objects.filter(applicant__in=employees_under_hod)
