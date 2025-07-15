@@ -260,6 +260,46 @@ def add_employee(request):
         return redirect('employee_list')
 
     return render(request, 'Application/add_employee.html')
+
+from django.contrib.auth import update_session_auth_hash
+
+@login_required
+def update_profile(request):
+    if request.method == 'POST':
+        user = request.user
+
+        # Update fields
+        user.full_name = request.POST.get('full_name')
+        user.phone_number = request.POST.get('phone_number')
+        user.department = request.POST.get('department')
+        user.position = request.POST.get('position')
+
+        # Handle password change
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+
+        if new_password or confirm_password:
+            if new_password != confirm_password:
+                messages.error(request, 'Passwords do not match.')
+                return redirect('profile')
+            elif len(new_password) < 6:
+                messages.error(request, 'Password must be at least 6 characters.')
+                return redirect('profile')
+            else:
+                user.set_password(new_password)
+                update_session_auth_hash(request, user)  # keep user logged in
+
+        user.save()
+        messages.success(request, 'Profile updated successfully.')
+        return redirect('profile')
+
+    return HttpResponse("Invalid request", status=400)
+
+
+def update(request):
+   return render(request, 'Application/update.html')
+
+
 '''
 @login_required
 def profile_view(request):
@@ -294,7 +334,7 @@ def profile_view(request):
         'user_obj': request.user,
         'departments': departments
     })
-
+'''
 @login_required
 def update_profile(request):
     if request.method == 'POST':
@@ -307,7 +347,7 @@ def update_profile(request):
         messages.success(request, 'Profile updated successfully.')
         return redirect('profile')
     return HttpResponse("Invalid request", status=400)
-
+'''
 @csrf_exempt  # Only use this if CSRF token is not included in your form!
 def signup_view(request):
     if request.method == 'POST':
