@@ -510,7 +510,7 @@ def dashboard_view(request):
 
         # Employees under this HOD's department
 
-        hod_department = Department.objects.filter(head=user).first()
+        hod_department = user.department
         employees_under_hod = []
 
         if hod_department:
@@ -521,7 +521,7 @@ def dashboard_view(request):
         context['department'] = hod_department
         context['employees'] = employees_under_hod
         context['total_employees'] = len(employees_under_hod)
-
+        
         # Leave requests by people in the department
         context['leave_requests'] = LeaveApplication.objects.filter(applicant__in=employees_under_hod)
 
