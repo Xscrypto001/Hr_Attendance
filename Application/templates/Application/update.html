@@ -1,0 +1,68 @@
+{% extends "Application/base.html" %}
+{% block title %}My Profile{% endblock %}
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-lg border-0">
+    <div class="card-header bg-primary text-white">
+      <h4 class="mb-0">👤 Update Profile</h4>
+    </div>
+    <div class="card-body">
+      <form method="post" action="{% url 'update_profile' %}" novalidate>
+        {% csrf_token %}
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="full_name" class="form-label">Full Name *</label>
+            <input type="text" name="full_name" id="full_name" class="form-control" value="{{ user_obj.full_name }}" required>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="phone_number" class="form-label">Phone Number</label>
+            <input type="text" name="phone_number" id="phone_number" class="form-control" value="{{ user_obj.phone_number|default:'' }}">
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="department" class="form-label">Department</label>
+            <select name="department" id="department" class="form-select">
+              {% for dept in departments %}
+                <option value="{{ dept }}" {% if user_obj.department == dept %}selected{% endif %}>{{ dept }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="col-md-6 mb-4">
+            <label for="position" class="form-label">Job Title</label>
+            <input type="text" name="position" id="position" class="form-control" value="{{ user_obj.position|default:'' }}">
+          </div>
+
+          <hr class="my-4">
+
+          <div class="col-12 mb-3">
+            <label for="new_password" class="form-label">New Password</label>
+            <input type="password" name="new_password" id="new_password" class="form-control" placeholder="Leave blank to keep current">
+          </div>
+
+          <div class="col-12 mb-4">
+            <label for="confirm_password" class="form-label">Confirm New Password</label>
+            <input type="password" name="confirm_password" id="confirm_password" class="form-control">
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-between">
+          <button type="submit" class="btn btn-success">💾 Save Changes</button>
+          <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">← Cancel</a>
+        </div>
+      </form>
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} mt-4">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
