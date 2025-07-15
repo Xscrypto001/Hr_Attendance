@@ -11,12 +11,13 @@
     <!-- My Leave Requests -->
     <div class="mt-5">
       <h4 class="text-light">📌 My Leave Requests</h4>
+    <button style='width:100px;height:55px;background-color:blue;color:white;'><a href="{% url 'reliever_requests' %}">Check leave requests</a></button>
       {% if my_leaves %}
         <ul class="list-group mb-4">
           {% for leave in my_leaves %}
             <li class="list-group-item d-flex justify-content-between align-items-center">
               <div>
-                <strong>{{ leave.leave_type }}</strong><br>
+                <strong>{{ leave.reason }}</strong><br>
                 <small class="text-muted">{{ leave.start_date }} → {{ leave.end_date }}</small>
               </div>
               <span class="badge {% if leave.final_status == 'Approved' %}bg-success{% elif leave.final_status == 'Rejected' %}bg-danger{% else %}bg-warning text-dark{% endif %} p-2 rounded">
@@ -58,7 +59,7 @@
           {% for leave in in_progress %}
             <li class="list-group-item d-flex justify-content-between align-items-center">
               <div>
-                <strong>{{ leave.leave_type }}</strong>
+                <strong>{{ leave.reason }}</strong>
               </div>
               <span class="badge {% if leave.final_status == 'Approved' %}bg-success{% elif leave.final_status == 'Rejected' %}bg-danger{% else %}bg-warning text-dark{% endif %} p-2 rounded">
                 {{ leave.final_status }}
