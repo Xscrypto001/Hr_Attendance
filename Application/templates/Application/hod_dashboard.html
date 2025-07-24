@@ -42,7 +42,8 @@
             <th class="p-2">From</th>
             <th class="p-2">To</th>
             <th class="p-2">Status</th>
-          </tr>
+<th> class="p-2">Action</th>     
+     </tr>
         </thead>
         <tbody>
           {% for leave in leave_requests %}
@@ -60,10 +61,25 @@
                 <span class="text-red-600 font-semibold">Rejected</span>
               {% endif %}
             </td>
+<td>
+<!-- Approve and Reject buttons inside a form -->
+<form method="POST" class="d-inline">
+    {% csrf_token %}
+    <input type="hidden" name="leave_id" value="{{ application.id }}">
+    <button type="submit" name="action" value="approve" class="btn btn-success btn-sm shadow rounded-pill px-4 me-2">
+        <i class="bi bi-check-circle-fill"></i> Approve
+    </button>
+    <button type="submit" name="action" value="reject" class="btn btn-danger btn-sm shadow rounded-pill px-4">
+        <i class="bi bi-x-circle-fill"></i> Reject
+    </button>
+</form>
+</td>
           </tr>
           {% endfor %}
         </tbody>
       </table>
+
+
     </div>
     {% else %}
     <p class="text-gray-500">No leave requests yet.</p>
