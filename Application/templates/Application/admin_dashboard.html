@@ -69,7 +69,7 @@
 
 
 <!-- Approve and Reject buttons inside a form -->
-<form method="POST" class="d-inline">
+<form method="POST" class="d-inline" action="{% url 'admin_approvals' %}">
     {% csrf_token %}
     <input type="hidden" name="leave_id" value="{{ leave.id }}">
     <button type="submit" name="action" value="approve" class="btn btn-success btn-sm shadow rounded-pill px-4 me-2">
