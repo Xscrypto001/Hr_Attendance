@@ -98,7 +98,7 @@ def reliever_requests(request):
 # Level 3: HOD approval
 @login_required
 def hod_approvals(request):
-    if request.user.role != 'manager':
+    if request.user.role != 'hod':
         return redirect('dashboard')
 
     dept = request.user.department
