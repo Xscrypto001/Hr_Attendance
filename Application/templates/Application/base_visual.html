@@ -1,57 +1,55 @@
-<!-- templates/leaves/progress_doughnut.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Leave Progress</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        .chart-container {
-            position: relative;
-            width: 250px;
-            height: 250px;
-            margin: auto;
-        }
-        .chart-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Leave Progress</title>
+  <style>
+    #progress-container {
+      width: 250px;
+      height: 250px;
+      margin: auto;
+    }
+    body {
+      background: #121212;
+      color: white;
+      font-family: sans-serif;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+  </style>
 </head>
-<body style="background:#121212; color:white; font-family:sans-serif; text-align:center;">
-    <h2>Leave Progress</h2>
-    <div class="chart-container">
-        <canvas id="leaveDoughnut"></canvas>
-        <div class="chart-text">{{ total_taken }}/{{ max_allowed }}</div>
-    </div>
+<body>
 
-    <script>
-        const ctx = document.getElementById('leaveDoughnut').getContext('2d');
-        const data = {
-            labels: ['Taken', 'Remaining'],
-            datasets: [{
-                data: [{{ total_taken }}, {{ remaining }}],
-                backgroundColor: ['#e74c3c', '#ecf0f1'],
-                borderWidth: 0,
-                cutout: '75%'
-            }]
-        };
+  <h2>Leave Progress</h2>
+  <div id="progress-container"></div>
 
-        const config = {
-            type: 'doughnut',
-            data: data,
-            options: {
-                plugins: {
-                    legend: { display: false }
-                }
-            }
-        };
+  <script src="https://cdn.jsdelivr.net/npm/progressbar.js"></script>
+  <script>
+    const maxAllowed = {{ max_allowed|default:60 }};
+    const totalTaken = {{ total_taken|default:0 }};
+    const percent = totalTaken / maxAllowed;
 
-        new Chart(ctx, config);
-    </script>
+    const bar = new ProgressBar.Circle('#progress-container', {
+      color: '#e74c3c',
+      strokeWidth: 10,
+      trailColor: '#eee',
+      trailWidth: 5,
+      easing: 'easeInOut',
+      duration: 1400,
+      text: {
+        autoStyleContainer: false
+      },
+      from: { color: '#e74c3c', width: 10 },
+      to: { color: '#e74c3c', width: 10 },
+      step: function(state, circle) {
+        circle.setText(`${totalTaken}/${maxAllowed}`);
+      }
+    });
+
+    bar.animate(percent);  // Animate from 0.0 to calculated percentage
+  </script>
+
 </body>
 </html>

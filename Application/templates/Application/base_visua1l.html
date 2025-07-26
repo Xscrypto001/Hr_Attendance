@@ -1,0 +1,61 @@
+
+<!-- templates/leaves/progress_doughnut.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Leave Progress</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            margin: auto;
+        }
+        .chart-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+    <h2>Leave Progress</h2>
+    <div class="chart-container">
+        <canvas id="leaveDoughnut"></canvas>
+        <div class="chart-text">{{ total_taken }}/{{ max_allowed }}</div>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('leaveDoughnut').getContext('2d');
+        const data = {
+            labels: ['Taken', 'Remaining'],
+            datasets: [{
+                data: [{{ total_taken }}, {{ remaining }}],
+                backgroundColor: ['#e74c3c', '#ecf0f1'],
+                borderWidth: 0,
+                cutout: '75%'
+            }]
+        };
+
+        const config = {
+            type: 'doughnut',
+            data: data,
+            options: {
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        };
+
+        new Chart(ctx, config);
+    </script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+</html>
