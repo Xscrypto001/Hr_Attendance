@@ -504,6 +504,12 @@ def dashboard_view(request):
         context['current_requests'] = context['my_leaves'].filter(final_status='pending')
         context['past_leaves'] = context['my_leaves'].filter(final_status='approved')
         context['reliever_for'] = LeaveApplication.objects.filter(releaver=user)
+        
+
+        context['total_taken'] = total_taken,
+        context['max_allowed'] = max_allowed,
+        context['percentage'] = percentage,
+
 
         # Progress: e.g. leave still in process
         context['in_progress'] = context['current_requests'].filter(
@@ -525,6 +531,8 @@ def dashboard_view(request):
         else:
             messages.warning(request, "You are not assigned as HOD of any department.")
 
+
+        
         context['department'] = hod_department
         context['employees'] = employees_under_hod
         context['total_employees'] = len(employees_under_hod)
@@ -641,7 +649,7 @@ def dashboard_view(request):
         return role_redirects.get(role, '/dashboard/')
 
 
-# views.py
+'''# views.py
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from datetime import date
@@ -671,7 +679,7 @@ def leave_progress_view(request):
 
 
 
-'''class SignupView(View):
+class SignupView(View):
     """Handle user registration"""
     
     @method_decorator(csrf_exempt)
