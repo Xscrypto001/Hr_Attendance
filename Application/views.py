@@ -498,6 +498,7 @@ def dashboard_view(request):
 
         total_taken = sum([leave.total_days() for leave in approved_leaves])
         max_allowed = 60
+        remaining = max_allowed - total_taken
         #percentage = round((total_taken / max_allowed) * 100) if max_all
         percentage = round((total_taken / max_allowed) * 100) if max_allowed > 0 else 0
         context['department'] = user.department
@@ -511,7 +512,7 @@ def dashboard_view(request):
         context['max_allowed'] = max_allowed,
         context['percentage'] = percentage,
 
-
+        context['remaining'] = remaining
         # Progress: e.g. leave still in process
         context['in_progress'] = context['current_requests'].filter(
             Q(releaver_approved=False) | Q(hod_approved=False) | Q(admin_approved=False)
