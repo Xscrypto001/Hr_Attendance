@@ -42,7 +42,7 @@
             <th class="p-2">From</th>
             <th class="p-2">To</th>
             <th class="p-2">Status</th>
-<th> class="p-2">Action</th>     
+<th class="p-2">Action</th>     
      </tr>
         </thead>
         <tbody>
@@ -63,7 +63,7 @@
             </td>
 <td>
 <!-- Approve and Reject buttons inside a form -->
-<form method="POST" action={% url 'hod_approvals' %} class="d-inline">
+<form method="POST" action="{% url 'hod_approvals' %}" class="d-inline">
     {% csrf_token %}
     <input type="hidden" name="leave_id" value="{{ application.id }}">
     <button type="submit" name="action" value="approve" class="btn btn-success btn-sm shadow rounded-pill px-4 me-2">
