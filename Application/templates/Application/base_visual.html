@@ -26,7 +26,7 @@
     <h2>Leave Progress</h2>
     <div class="chart-container">
         <canvas id="leaveDoughnut"></canvas>
-        <div class="chart-text">{{ total_taken }}/{{ remaining }}</div>
+        <div class="chart-text">{{ total_taken }}/{{ max_allowed }}</div>
     </div>
 
     <script>
@@ -34,7 +34,7 @@
         const data = {
             labels: ['Taken', 'Remaining'],
             datasets: [{
-                data: [{{ total_taken }}, {{ max_allowed|add:-total_taken }}],
+                data: [{{ total_taken }}, {{ remaining }}],
                 backgroundColor: ['#e74c3c', '#ecf0f1'],
                 borderWidth: 0,
                 cutout: '75%'
