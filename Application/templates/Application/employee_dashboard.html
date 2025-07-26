@@ -4,12 +4,41 @@
 
 {% block content %}
 <div class="container mt-5">
-  <div class="bg-white text-white p-4 rounded shadow-sm">
+  <div class="bg-dark text-white p-4 rounded shadow-sm">
     <h2 class="text-center mb-4">Welcome, <span class="text-info">{{ user.full_name }}</span></h2>
     <p class="text-center">Department: <span class="text-warning">{{ department }}</span></p>
+<h2>Leave Progress</h2>
 
-{% include 'Application/base_visual.html' %}
+  <div id="progress-container">
+    <div id="progress-text" class="progress-text"></div>
+  </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/progressbar.js"></script>
+  <script>
+    const maxAllowed = 60;
+    const totalTaken = 15;
+    const percent = totalTaken / maxAllowed;
+
+    // Create circular progress
+    const bar = new ProgressBar.Circle('#progress-container', {
+      color: '#e74c3c',
+      strokeWidth: 10,
+      trailColor: '#ecf0f1',
+      trailWidth: 5,
+      easing: 'easeInOut',
+      duration: 1400,
+      step: function(state, circle) {
+        // You can change the animation or color here if needed
+      }
+    });
+
+    // Animate and set text
+    bar.animate(percent, {
+      duration: 1000
+    }, function () {
+      document.getElementById('progress-text').textContent = `${totalTaken}/${maxAllowed}`;
+    });
+  </script>
     <!-- My Leave Requests -->
     <div class="mt-5">
       <h4 class="text-light">📌 My Leave Requests</h4>

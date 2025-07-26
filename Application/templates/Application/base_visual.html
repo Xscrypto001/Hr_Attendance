@@ -4,51 +4,68 @@
   <meta charset="UTF-8">
   <title>Leave Progress</title>
   <style>
-    #progress-container {
-      width: 250px;
-      height: 250px;
-      margin: auto;
-    }
     body {
       background: #121212;
       color: white;
       font-family: sans-serif;
       text-align: center;
     }
+
     h2 {
       margin-bottom: 20px;
+    }
+
+    #progress-container {
+      width: 250px;
+      height: 250px;
+      margin: auto;
+      position: relative;
+    }
+
+    .progress-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.6rem;
+      font-weight: bold;
+      color: white;
     }
   </style>
 </head>
 <body>
 
   <h2>Leave Progress</h2>
-  <div id="progress-container"></div>
+
+  <div id="progress-container">
+    <div id="progress-text" class="progress-text"></div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/progressbar.js"></script>
   <script>
-    const maxAllowed = {{ max_allowed|default:60 }};
-    const totalTaken = {{ total_taken|default:0 }};
+    const maxAllowed = 60;
+    const totalTaken = 15;
     const percent = totalTaken / maxAllowed;
 
+    // Create circular progress
     const bar = new ProgressBar.Circle('#progress-container', {
       color: '#e74c3c',
       strokeWidth: 10,
-      trailColor: '#eee',
+      trailColor: '#ecf0f1',
       trailWidth: 5,
       easing: 'easeInOut',
       duration: 1400,
-      text: {
-        autoStyleContainer: false
-      },
-      from: { color: '#e74c3c', width: 10 },
-      to: { color: '#e74c3c', width: 10 },
       step: function(state, circle) {
-        circle.setText(`${totalTaken}/${maxAllowed}`);
+        // You can change the animation or color here if needed
       }
     });
 
-    bar.animate(percent);  // Animate from 0.0 to calculated percentage
+    // Animate and set text
+    bar.animate(percent, {
+      duration: 1000
+    }, function () {
+      document.getElementById('progress-text').textContent = `${totalTaken}/${maxAllowed}`;
+    });
   </script>
 
 </body>
