@@ -133,9 +133,7 @@ def admin_approvals(request):
         return redirect('dashboard')
 
     applications = LeaveApplication.objects.filter(
-        releaver_approved=True,
-        hod_approved=True,
-        admin_approved=False,
+       
         final_status='pending'
     )
 

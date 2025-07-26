@@ -64,7 +64,7 @@
             <span class="badge {% if leave.final_status == 'Approved' %}bg-success{% elif leave.final_status == 'Rejected' %}bg-danger{% else %}bg-warning text-dark{% endif %} p-2 rounded">
               {{ leave.final_status }}
             </span>
-          </li>
+         
 <!--       <button > <a href='{% url 'hod_approvals' %}'> </a><button>-->
 
 
@@ -80,7 +80,7 @@
     </button>
 </form>
 
-
+</li>
         {% endfor %}
       </ul>
     {% else %}
