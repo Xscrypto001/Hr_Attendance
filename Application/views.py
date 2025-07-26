@@ -498,7 +498,8 @@ def dashboard_view(request):
 
         total_taken = sum([leave.total_days() for leave in approved_leaves])
         max_allowed = 60
-        percentage = round((total_taken / max_allowed) * 100) if max_all
+        #percentage = round((total_taken / max_allowed) * 100) if max_all
+        percentage = round((total_taken / max_allowed) * 100) if max_allowed > 0 else 0
         context['department'] = user.department
         context['my_leaves'] = LeaveApplication.objects.filter(applicant=user)
         context['current_requests'] = context['my_leaves'].filter(final_status='pending')
