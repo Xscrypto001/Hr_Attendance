@@ -491,7 +491,14 @@ def dashboard_view(request):
 
     elif user.role == 'employee':
         # Employee Dashboard
+        approved_leaves = LeaveApplication.objects.filter(
+           applicant=user,
+           final_status='approved'
+        )
 
+        total_taken = sum([leave.total_days() for leave in approved_leaves])
+        max_allowed = 60
+        percentage = round((total_taken / max_allowed) * 100) if max_all
         context['department'] = user.department
         context['my_leaves'] = LeaveApplication.objects.filter(applicant=user)
         context['current_requests'] = context['my_leaves'].filter(final_status='pending')
@@ -632,6 +639,37 @@ def dashboard_view(request):
             'manager': '/manager-dashboard/',
         }
         return role_redirects.get(role, '/dashboard/')
+
+
+# views.py
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from datetime import date
+from .models import LeaveApplication
+
+@login_required
+def leave_progress_view(request):
+    user = request.user
+    approved_leaves = LeaveApplication.objects.filter(
+        applicant=user,
+        final_status='approved'
+    )
+
+    total_taken = sum([leave.total_days() for leave in approved_leaves])
+    max_allowed = 60
+    percentage = round((total_taken / max_allowed) * 100) if max_allowed > 0 else 0
+
+    context = {
+        'total_taken': total_taken,
+        'max_allowed': max_allowed,
+        'percentage': percentage
+    }
+
+    return render(request, 'leaves/progress_doughnut.html', context)
+
+
+
+
 
 '''class SignupView(View):
     """Handle user registration"""
