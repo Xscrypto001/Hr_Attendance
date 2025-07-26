@@ -480,7 +480,7 @@ def dashboard_view(request):
         context['approved_leaves'] = LeaveApplication.objects.filter(
             final_status='approved'
         ).count()
-
+        context['leave_requests'] = LeaveApplication.objects.all()
         context['leaves_this_month'] = leaves_this_month.count()
         context['leaves_per_department'] = User.objects.filter(role='employee') \
           .values('department') \
@@ -508,7 +508,7 @@ def dashboard_view(request):
         context['reliever_for'] = LeaveApplication.objects.filter(releaver=user)
         
 
-        context['total_taken'] = total_taken,
+        context['total_taken'] = int(total_taken),
         context['max_allowed'] = max_allowed,
         context['percentage'] = percentage,
 

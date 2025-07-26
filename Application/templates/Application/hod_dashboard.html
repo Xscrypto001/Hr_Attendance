@@ -65,7 +65,8 @@
 <!-- Approve and Reject buttons inside a form -->
 <form method="POST" action="{% url 'hod_approvals' %}" class="d-inline">
     {% csrf_token %}
-    <input type="hidden" name="leave_id" value="{{ application.id }}">
+
+    <input type="hidden" name="leave_id" value="{{ leave.id }}">
     <button type="submit" name="action" value="approve" class="btn btn-success btn-sm shadow rounded-pill px-4 me-2">
         <i class="bi bi-check-circle-fill"></i> Approve
     </button>
