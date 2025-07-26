@@ -120,7 +120,7 @@ class LeaveType(models.Model):
 
 
     ]
-    reason = models.CharField(max_length=20, choices=,null=True, default='Casual leave')
+    reason = models.CharField(max_length=20, choices=REASON_CHOICES ,null=True, default='Casual leave')
     def __str__(self):
         return self.name
 
