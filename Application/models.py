@@ -109,7 +109,18 @@ class LeaveType(models.Model):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True)
     max_days = models.PositiveIntegerField(default=30)  # default max days per year
+    REASON_CHOICES = [
+        ('Casual leave', 'Casual leave'),
+        ('Sabatical', 'Sabatical'),
+        ('Medical', 'Approved'),
+        ('Vacation', 'Cancelled'),
+        ('Ma/partanity', 'Ma/partanity'),
+        ('Bereavement', 'Bereavement'),
+        ('Compensatory', 'Compensatory'),
 
+
+    ]
+    reason = models.CharField(max_length=20, choices=,null=True, default='Casual leave')
     def __str__(self):
         return self.name
 
