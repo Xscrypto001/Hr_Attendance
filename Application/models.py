@@ -108,7 +108,7 @@ class LoginActivity(models.Model):
 class LeaveType(models.Model):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True)
-    max_days = models.PositiveIntegerField(default=30)  # default max days per year
+    max_days = models.PositiveIntegerField(default=60)  # default max days per year
     REASON_CHOICES = [
         ('Casual leave', 'Casual leave'),
         ('Sabatical', 'Sabatical'),
@@ -133,10 +133,20 @@ class LeaveApplication(models.Model):
         ('approved', 'Approved'),
         ('cancelled', 'Cancelled'),
     ]
+    REASON_CHOICE = [
+        ('Casual leave', 'Casual leave'),
+        ('Sabatical', 'Sabatical'),
+        ('Medical', 'Approved'),
+        ('Vacation', 'Cancelled'),
+        ('Ma/partanity', 'Ma/partanity'),
+        ('Bereavement', 'Bereavement'),
+        ('Compensatory', 'Compensatory'),                                                       
+
+    ]
 
     applicant = models.ForeignKey(User, related_name='leave_applications', on_delete=models.CASCADE)
     releaver = models.ForeignKey(User, related_name='releaver_requests', on_delete=models.SET_NULL, null=True)
-    leave_type = models.ForeignKey(LeaveType, on_delete=models.SET_NULL, null=True)
+    leave_type = models.CharField(max_length=20, choices=REASON_CHOICE ,null=True, default='Casual leave')
     
     start_date = models.DateField()
     end_date = models.DateField()
