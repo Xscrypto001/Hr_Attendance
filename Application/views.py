@@ -488,29 +488,31 @@ def dashboard_view(request):
         return render(request, 'Application/admin_dashboard.html', context)
 
     elif user.role == 'employee':
-        # Employee Dashboard
+    leave_types = LeaveType.objects.all()
+    leave_balances = []
+
+    for leave_type in leave_types:
         approved_leaves = LeaveApplication.objects.filter(
-           applicant=user,
-           final_status='approved'
+            applicant=user,
+            leave_type=leave_type,
+            final_status='approved'
         )
 
-        total_taken = sum([leave.total_days() for leave in approved_leaves])
-        max_allowed = 60
-        remaining = max_allowed - total_taken
-        #percentage = round((total_taken / max_allowed) * 100) if max_all
-        percentage = round((total_taken / max_allowed) * 100) if max_allowed > 0 else 0
-        context['department'] = user.department
-        context['my_leaves'] = LeaveApplication.objects.filter(applicant=user)
-        context['current_requests'] = context['my_leaves'].filter(final_status='pending')
-        context['past_leaves'] = context['my_leaves'].filter(final_status='approved')
-        context['reliever_for'] = LeaveApplication.objects.filter(releaver=user)
-        
+        used_days = sum((leave.end_date - leave.start_date).days + 1 for leave in approved_leaves)
+        max_allowed = leave_type.max_days  # assuming each LeaveType has a max_days field
+        remaining_days = max_allowed - used_days if max_allowed > used_days else 0
+        percentage = round((used_days / max_allowed) * 100) if max_allowed > 0 else 0
 
-        context['total_taken'] = int(total_taken),
-        context['max_allowed'] = max_allowed,
-        context['percentage'] = percentage,
+        leave_balances.append({
+            'type': leave_type.name,
+            'used': used_days,
+            'remaining': remaining_days,
+            'allowed': max_allowed,
+            'percentage': percentage
+        })
 
-        context['remaining'] = remaining
+    context['leave_balances'] = leave_balances
+
         # Progress: e.g. leave still in process
         context['in_progress'] = context['current_requests'].filter(
             Q(releaver_approved=False) | Q(hod_approved=False) | Q(admin_approved=False)
