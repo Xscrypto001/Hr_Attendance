@@ -1,107 +1,94 @@
-{% extends "Application/base.html" %}
-
-{% block title %}Admin Dashboard{% endblock %}
-
+{% extends 'Application/base.html' %}
+{% load static %}
 {% block content %}
+
 <div class="container mt-5">
-  <div class="bg-dark text-white p-4 rounded shadow-sm">
-    <h2 class="text-center mb-4">Welcome, <span class="text-info">{{ user.full_name }}</span></h2>
-    <p class="text-center">Department: <span class="text-warning">{{ department }}</span></p>
-<h2>Leave Progress</h2>
+    <h1 class="text-light">Welcome, {{ user.first_name }} {{ user.last_name }}</h1>
+    <p class="text-muted">Department: {{ department }}</p>
 
-  <div id="progress-container">
-    <div id="progress-text" class="progress-text"></div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/progressbar.js"></script>
-  <script>
-    const maxAllowed = 60;
-    const totalTaken = 15;
-    const percent = totalTaken / maxAllowed;
-
-    // Create circular progress
-    const bar = new ProgressBar.Circle('#progress-container', {
-      color: '#e74c3c',
-      strokeWidth: 10,
-      trailColor: '#ecf0f1',
-      trailWidth: 5,
-      easing: 'easeInOut',
-      duration: 1400,
-      step: function(state, circle) {
-        // You can change the animation or color here if needed
-      }
-    });
-
-    // Animate and set text
-    bar.animate(percent, {
-      duration: 1000
-    }, function () {
-      document.getElementById('progress-text').textContent = `${totalTaken}/${maxAllowed}`;
-    });
-  </script>
-    <!-- My Leave Requests -->
-    <div class="mt-5">
-      <h4 class="text-light">📌 My Leave Requests</h4>
-    <button style='width:100px;height:55px;background-color:blue;color:white;'><a href="{% url 'reliever_requests' %}">Check leave requests</a></button>
-      {% if my_leaves %}
-        <ul class="list-group mb-4">
-          {% for leave in my_leaves %}
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              <div>
-                <strong>{{ leave.reason }}</strong><br>
-                <small class="text-muted">{{ leave.start_date }} → {{ leave.end_date }}</small>
-              </div>
-              <span class="badge {% if leave.final_status == 'Approved' %}bg-success{% elif leave.final_status == 'Rejected' %}bg-danger{% else %}bg-warning text-dark{% endif %} p-2 rounded">
-                {{ leave.final_status }}
-              </span>
-            </li>
-          {% endfor %}
-        </ul>
-      {% else %}
-        <div class="alert alert-info">You have no leave requests yet.</div>
-      {% endif %}
+    <!-- My Leaves -->
+    <h2 class="text-light mt-4">My Leaves</h2>
+    <div class="table-responsive bg-dark p-3 rounded shadow-sm">
+        <table class="table table-dark table-striped">
+            <thead>
+                <tr>
+                    <th>Leave Type</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for leave in my_leaves %}
+                <tr>
+                    <td>{{ leave.leave_type }}</td>
+                    <td>{{ leave.start_date }}</td>
+                    <td>{{ leave.end_date }}</td>
+                    <td>{{ leave.final_status }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center text-muted">No leave records found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
-    <!-- Currently Chosen as Reliever -->
-    <div class="mt-5">
-      <h4 class="text-light">🧍 Currently Chosen as Reliever</h4>
-      {% if reliever_for %}
-        <ul class="list-group mb-4">
-          {% for leave in reliever_for %}
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              <div>
-                <strong>{{ leave.applicant.full_name }}</strong><br>
-                <small class="text-muted">{{ leave.start_date }} → {{ leave.end_date }}</small>
-              </div>
-              <span class="badge bg-secondary p-2 rounded">Reliever</span>
-            </li>
-          {% endfor %}
-        </ul>
-      {% else %}
-        <div class="alert alert-warning">You are not assigned as a reliever currently.</div>
-      {% endif %}
+    <!-- Leave Balances with Donut Graphs -->
+    <h2 class="text-light mt-5">My Leave Balances</h2>
+    <div class="row">
+        {% for balance in leave_balances %}
+        <div class="col-md-4 mb-4">
+            <div class="card bg-dark text-white shadow-sm h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ balance.type }}</h5>
+                    <canvas id="chart-{{ forloop.counter }}"></canvas>
+                    <p class="mt-3">
+                        <strong>Allowed:</strong> {{ balance.allowed }} days<br>
+                        <span class="text-success"><strong>Remaining:</strong> {{ balance.remaining }} days</span><br>
+                        <span class="text-warning"><strong>Used:</strong> {{ balance.used }} days</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center text-muted">
+            No leave balance data available
+        </div>
+        {% endfor %}
     </div>
-
-    <!-- In Progress -->
-    <div class="mt-5">
-      <h4 class="text-light">⏳ In Progress</h4>
-      {% if in_progress %}
-        <ul class="list-group mb-5">
-          {% for leave in in_progress %}
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              <div>
-                <strong>{{ leave.reason }}</strong>
-              </div>
-              <span class="badge {% if leave.final_status == 'Approved' %}bg-success{% elif leave.final_status == 'Rejected' %}bg-danger{% else %}bg-warning text-dark{% endif %} p-2 rounded">
-                {{ leave.final_status }}
-              </span>
-            </li>
-          {% endfor %}
-        </ul>
-      {% else %}
-        <div class="alert alert-secondary">No in-progress leave requests found.</div>
-      {% endif %}
-    </div>
-  </div>
 </div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    {% for balance in leave_balances %}
+    new Chart(document.getElementById("chart-{{ forloop.counter }}"), {
+        type: 'doughnut',
+        data: {
+            labels: ['Used', 'Remaining'],
+            datasets: [{
+                data: [{{ balance.used }}, {{ balance.remaining }}],
+                backgroundColor: ['#ffc107', '#28a745'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'bottom', labels: { color: 'white' } },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.label + ': ' + context.parsed + ' days';
+                        }
+                    }
+                }
+            }
+        }
+    });
+    {% endfor %}
+</script>
+
 {% endblock %}
