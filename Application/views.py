@@ -498,7 +498,11 @@ def dashboard_view(request):
             final_status='approved'
         )
 
-        used_days = sum((leave.end_date - leave.start_date).days + 1 for leave in approved_leaves)
+        used_days = sum(
+            (leave.end_date - leave.start_date).days + 1
+            for leave in approved_leaves
+        )
+
         max_allowed = leave_type.max_days  # assuming each LeaveType has a max_days field
         remaining_days = max_allowed - used_days if max_allowed > used_days else 0
         percentage = round((used_days / max_allowed) * 100) if max_allowed > 0 else 0
@@ -510,6 +514,7 @@ def dashboard_view(request):
             'allowed': max_allowed,
             'percentage': percentage
         })
+
 
     context['leave_balances'] = leave_balances
 
