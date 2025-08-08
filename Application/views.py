@@ -487,7 +487,7 @@ def dashboard_view(request):
 
         return render(request, 'Application/admin_dashboard.html', context)
 
-    elif user.role == 'employee':
+   elif user.role == 'employee':
     leave_types = LeaveType.objects.all()
     leave_balances = []
 
