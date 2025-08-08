@@ -110,17 +110,15 @@ class LeaveType(models.Model):
     description = models.TextField(blank=True)
     max_days = models.PositiveIntegerField(default=60)  # default max days per year
     REASON_CHOICES = [
-        ('Casual leave', 'Casual leave'),
-        ('Sabatical', 'Sabatical'),
-        ('Medical', 'Approved'),
-        ('Vacation', 'Cancelled'),
-        ('Ma/partanity', 'Ma/partanity'),
-        ('Bereavement', 'Bereavement'),
-        ('Compensatory', 'Compensatory'),
+    ('Vacation', 'Vacation'),
+    ('Sick', 'Sick'),
+    ('Maternity', 'Maternity'),
+    ('Bereavement', 'Bereavement'),
+    ('Unpaid', 'Unpaid'),
+    ('Educational', 'Educational'),
+]
 
-
-    ]
-    reason = models.CharField(max_length=20, choices=REASON_CHOICES ,null=True, default='Casual leave')
+    reason = models.CharField(max_length=20, choices=REASON_CHOICES ,null=True, default='Vacation leave')
     def __str__(self):
         return self.name
 
@@ -133,16 +131,15 @@ class LeaveApplication(models.Model):
         ('approved', 'Approved'),
         ('cancelled', 'Cancelled'),
     ]
-    REASON_CHOICE = [
-        ('Casual leave', 'Casual leave'),
-        ('Sabatical', 'Sabatical'),
-        ('Medical', 'Approved'),
-        ('Vacation', 'Cancelled'),
-        ('Ma/partanity', 'Ma/partanity'),
-        ('Bereavement', 'Bereavement'),
-        ('Compensatory', 'Compensatory'),                                                       
+    REASON_CHOICE = [[
+    ('Vacation', 'Vacation'),
+    ('Sick', 'Sick'),
+    ('Maternity', 'Maternity'),
+    ('Bereavement', 'Bereavement'),
+    ('Unpaid', 'Unpaid'),
+    ('Educational', 'Educational'),
+]
 
-    ]
 
     applicant = models.ForeignKey(User, related_name='leave_applications', on_delete=models.CASCADE)
     releaver = models.ForeignKey(User, related_name='releaver_requests', on_delete=models.SET_NULL, null=True)
