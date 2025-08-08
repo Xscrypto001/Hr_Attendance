@@ -141,6 +141,7 @@ class LeaveApplication(models.Model):
 ]
 
 
+
     applicant = models.ForeignKey(User, related_name='leave_applications', on_delete=models.CASCADE)
     releaver = models.ForeignKey(User, related_name='releaver_requests', on_delete=models.SET_NULL, null=True)
     leave_type = models.CharField(max_length=20, choices=REASON_CHOICE ,null=True, default='Casual leave')
