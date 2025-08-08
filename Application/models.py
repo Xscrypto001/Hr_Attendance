@@ -131,7 +131,7 @@ class LeaveApplication(models.Model):
         ('approved', 'Approved'),
         ('cancelled', 'Cancelled'),
     ]
-    REASON_CHOICE = [[
+    REASON_CHOICE = [
     ('Vacation', 'Vacation'),
     ('Sick', 'Sick'),
     ('Maternity', 'Maternity'),
