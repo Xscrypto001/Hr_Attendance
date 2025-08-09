@@ -32,7 +32,4 @@ urlpatterns = [
     # Dashboard and home
     path('dashboard/', views.dashboard_view, name='dashboard'),
     path('', views.AuthView.as_view(), name='auth'),  # homepage/login page
-
-    # Remove or comment out any routes referencing undefined views, like 'update'
-    # path('update/', views.update, name='update'),  # remove this line if 'update' not defined
 ]
