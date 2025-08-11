@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib.auth.views import LogoutView
 from . import views
-
+from . import progress
 urlpatterns = [
     # Auth
     path('signup/', views.SignupView.as_view(), name='register'),
@@ -32,4 +32,9 @@ urlpatterns = [
     # Dashboard and home
     path('dashboard/', views.dashboard_view, name='dashboard'),
     path('', views.AuthView.as_view(), name='auth'),  # homepage/login page
+
+   #progress bar 
+   path("leave-balances/", progress.leave_balances, name="leave_balances"),
+
+
 ]
