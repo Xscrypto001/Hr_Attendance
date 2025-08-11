@@ -6,10 +6,10 @@ from .models import LeaveApplication
 @login_required
 def leave_balances(request):
     leave_types = [
-        ("Sick", "#ec4899"),
-        ("Privileged", "#22c55e"),
-        ("Floater", "#facc15"),
-        ("Casual", "#3b82f6")
+        ("Vacaton", "#ec4899"),
+        ("Maternity ", "#22c55e"),
+        ("Unpaid", "#facc15"),
+        ("Educational", "#3b82f6")
     ]
 
     leave_data = []
@@ -25,10 +25,10 @@ def leave_balances(request):
         total_days_taken = sum([leave.total_days() for leave in leaves])
 
         max_days = {
-            "Sick": 10,
-            "Privileged": 15,
-            "Floater": 5,
-            "Casual": 7
+            "Vacaton": 10,
+            "Educational": 15,
+            "Unpaid": 15,
+            "Educational": 27
         }.get(leave_type, 0)
 
         balance = max_days - total_days_taken
