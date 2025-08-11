@@ -9,7 +9,11 @@ def leave_balances(request):
         ("Vacaton", "#ec4899"),
         ("Maternity ", "#22c55e"),
         ("Unpaid", "#facc15"),
-        ("Educational", "#3b82f6")
+        ("Educational", "#3b82f6"),
+       ("sick", "#FF0000"),
+        ("Bereavement", "#800080")
+
+
     ]
 
     leave_data = []
@@ -28,7 +32,9 @@ def leave_balances(request):
             "Vacaton": 10,
             "Educational": 15,
             "Unpaid": 15,
-            "Educational": 27
+            "Educational": 27,
+          "sick": 10,
+        "Bereavement": 3
         }.get(leave_type, 0)
 
         balance = max_days - total_days_taken
