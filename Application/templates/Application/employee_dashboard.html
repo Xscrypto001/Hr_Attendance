@@ -1,10 +1,86 @@
 {% extends 'Application/base.html' %}
 {% load static %}
 {% block content %}
+<style>
+    .progress-ring {
+      position: relative;
+      width: 100px;
+      height: 100px;
+    }
+    .progress-ring circle {
+      fill: none;
+      stroke-width: 8;
+      transform: rotate(-90deg);                                                                      
+transform-origin: 50% 50%;
+    }
+    .progress-ring__bg {
+      stroke: #e5e7eb;
+    }
+    .progress-ring__value {
+      stroke-linecap: round;
+    }                                                                                             
 
+
+.</style>
 <div class="container mt-5">
-    <h1 class="text-light">Welcome, {{ user.first_name }} {{ user.last_name }}</h1>
+    <h1 class="text-black">Welcome, {{ user.first_name }} {{ user.last_name }}</h1>
     <p class="text-muted">Department: {{ department }}</p>
+
+<div class="bg-white shadow-lg rounded-lg p- w-full">
+  <h2 class="text-xl font-semibold text-gray-800 mb-6">Leave Balances</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+    {% for leave in leave_data %}
+    <div class="bg-white shadow rounded-lg flex flex-col items-center p-4">
+      <div class="progress-ring">
+        <svg width="100" height="100">
+          <circle class="progress-ring__bg" r="45" cx="50" cy="50"/>
+          <circle class="progress-ring__value"
+            r="45" cx="50" cy="50"
+            stroke="{{ leave.color }}"
+            stroke-dasharray="283"
+            stroke-dashoffset="{{ leave.stroke_offset }}"
+          />
+        </svg>
+        <span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-lg font-bold text-gray-700">
+          {{ leave.balance }} days
+        </span>
+      </div>
+      <p class="mt-3 text-gray-600 font-medium">{{ leave.name }}</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+
+
+<!--<div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-5xl">
+    <h2 class="text-xl font-semibold text-gray-800 mb-6">Leave Balances</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+
+      {% for leave in leave_data %}
+      <div class="bg-white shadow rounded-lg flex flex-col items-center p-4">
+        <div class="progress-ring">
+          <svg width="100" height="100">
+            <circle class="progress-ring__bg" r="45" cx="50" cy="50"/>
+            <circle class="progress-ring__value"
+    r="45" cx="50" cy="50"
+    stroke="{{ leave.color }}"
+    stroke-dasharray="283"
+    stroke-dashoffset="{{ leave.stroke_offset }}"
+/>
+
+          </svg>
+          <span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-lg font-bold text-gray-700">
+            {{ leave.balance }} days
+          </span>
+        </div>
+        <p class="mt-3 text-gray-600 font-medium">{{ leave.name }}</p>
+      </div>
+      {% endfor %}
+
+    </div>-->
+
+
 
     <!-- My Leaves -->
     <h2 class="text-light mt-4">My Leaves</h2>
