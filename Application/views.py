@@ -134,7 +134,7 @@ class SignupView(View):
             role = data.get('role', '')
 
             if not all([name, email, password, confirm_password, role]):
-                return JsonResponse({'success': False, 'message': 'All fields are required'}, status=400)
+                return  redirect('dashboard')
 
             try:
                 validate_email(email)
@@ -174,7 +174,7 @@ class SignupView(View):
                     role_used=role,
                 )
 
-            return JsonResponse({'success': True, 'message': 'Account created successfully', 'redirect_url': self.get_redirect_url(role)})
+            return redirect('dashboard')
         except Exception:
             return JsonResponse({'success': False, 'message': 'An error occurred during registration'}, status=500)
 
@@ -214,7 +214,7 @@ def apply_leave(request):
 
 @login_required
 def reliever_requests(request):
-    if request.user.role != 'employee':
+    if request.userole != 'employee':
         return redirect('dashboard')
 
     requests = LeaveApplication.objects.filter(releaver=request.user, releaver_approved=False)
