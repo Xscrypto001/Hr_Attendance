@@ -87,9 +87,9 @@ class LoginView(View):
                     user_agent=request.META.get('HTTP_USER_AGENT', ''),
                     role_used=role,
                 )
-                return redirect('index')
+                return redirect('dashboard')
             else:
-                return redirect('index')
+                return redirect('dashboard')
 
         except Exception:
             return JsonResponse({'success': False, 'message': 'An error occurred during login'}, status=500)
