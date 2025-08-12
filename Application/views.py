@@ -207,10 +207,12 @@ def apply_leave(request):
 
 @login_required
 def reliever_requests(request):
-    if request.userole != 'employee':
+    #if request.userole != 'employee':
+    if request.user.role != 'employee':
+
         return redirect('dashboard')
 
-    requests = LeaveApplication.objects.filter(releaver=request.user, releaver_approved=False)
+    requests = LeaveApplication.objects.filter(releaver=request.user)
     if request.method == 'POST':
         leave_id = request.POST.get('leave_id')
         action = request.POST.get('action')
