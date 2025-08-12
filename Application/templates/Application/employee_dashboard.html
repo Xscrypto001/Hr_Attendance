@@ -1,6 +1,8 @@
 {% extends 'Application/base.html' %}
 {% load static %}
 {% block content %}
+
+<script src="https://cdn.tailwindcss.com"></script>
 <style>
     .progress-ring {
       position: relative;
@@ -26,12 +28,12 @@ transform-origin: 50% 50%;
     <h1 class="text-black">Welcome, {{ user.first_name }} {{ user.last_name }}</h1>
     <p class="text-muted">Department: {{ department }}</p>
 
-
+<div className="bg-orange-600">
 <a href="{% url 'leave_balances' %}"
-   class="inline-block px-6 py-3 text-white font-semibold text-lg rounded-full shadow-lg transition duration-300 ease-in-out bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:scale-105 hover:shadow-2xl">
+   class="inline-block px-6 bg-orange-500  py-3 text-white font-semibold text-lg rounded-full shadow-lg transition duration-300 ease-in-out bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:scale-105 hover:shadow-2xl">
    📊 View Leave Balances
 </a>
-
+</div>
 
 
 <!--<div class="bg-white shadow-lg rounded-lg p- w-full">

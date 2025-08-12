@@ -87,19 +87,9 @@ class LoginView(View):
                     user_agent=request.META.get('HTTP_USER_AGENT', ''),
                     role_used=role,
                 )
-                return JsonResponse({
-                    'success': True,
-                    'message': 'Login successful',
-                    'redirect_url': self.get_redirect_url(user.role),
-                    'user': {
-                        'id': user.id,
-                        'name': user.full_name,
-                        'email': user.email,
-                        'role': user.role,
-                    }
-                })
+                return redirect('index')
             else:
-                return JsonResponse({'success': False, 'message': 'Invalid credentials'}, status=401)
+                return redirect('index')
 
         except Exception:
             return JsonResponse({'success': False, 'message': 'An error occurred during login'}, status=500)
@@ -182,7 +172,7 @@ class SignupView(View):
             return JsonResponse({'success': False, 'message': 'An error occurred during registration'}, status=500)
 
 
-@login_required
+
 def logout_view(request):
     logout(request)
     messages.success(request, 'You have been logged out successfully')
