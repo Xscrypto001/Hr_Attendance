@@ -31,10 +31,11 @@ urlpatterns = [
 
     # Dashboard and home
     path('dashboard/', views.dashboard_view, name='dashboard'),
-    path('', views.AuthView.as_view(), name='auth'),  # homepage/login page
+    path('auth/', views.AuthView.as_view(), name='auth'),  # homepage/login page
 
    #progress bar 
    path("leave-balances/", progress.leave_balances, name="leave_balances"),
 
-
+   path("", views.index , name="index")
 ]
+ 

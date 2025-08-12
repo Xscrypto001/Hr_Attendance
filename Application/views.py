@@ -114,7 +114,10 @@ class LoginView(View):
         }
         return role_redirects.get(role, '/dashboard/')
 
+def index(request):
 
+
+   return render(request, "Application/index.html")
 class SignupView(View):
     @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
@@ -134,7 +137,7 @@ class SignupView(View):
             role = data.get('role', '')
 
             if not all([name, email, password, confirm_password, role]):
-                return  redirect('dashboard')
+                return  redirect('index')
 
             try:
                 validate_email(email)
@@ -174,7 +177,7 @@ class SignupView(View):
                     role_used=role,
                 )
 
-            return redirect('dashboard')
+            return redirect('index')
         except Exception:
             return JsonResponse({'success': False, 'message': 'An error occurred during registration'}, status=500)
 
