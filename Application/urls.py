@@ -6,7 +6,7 @@ urlpatterns = [
     # Auth
     path('signup/', views.SignupView.as_view(), name='register'),
     path('signin/', views.LoginView.as_view(), name='login'),
-    path('logout/', LogoutView.as_view(), name='logout'),
+    path('logout/', views.logout_view, name='logout'),
 
     # Leave management
     path('leave/apply/', views.apply_leave, name='apply_leave'),
