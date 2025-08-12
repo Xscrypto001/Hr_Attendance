@@ -35,7 +35,7 @@ def leave_balances(request):
             "Educational": 27,
           "sick": 10,
         "Bereavement": 3,
-         "Maternity ", 11,
+         "Maternity ": 11,
         }.get(leave_type, 0)
 
         balance = max_days - total_days_taken
